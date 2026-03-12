@@ -11,9 +11,12 @@ const mascots = [
 
 interface MascotsProps {
   step: number;
+  nomineeCount?: number;
 }
 
-export default function Mascots({ step }: MascotsProps) {
+export default function Mascots({ step, nomineeCount = 0 }: MascotsProps) {
+  // On mobile: only show when few nominees (≤5) or on welcome/review/done screens
+  const showOnMobile = nomineeCount <= 5;
   const [sequence] = useState(() => {
     const seq: number[] = [];
     let last = -1;
@@ -29,7 +32,7 @@ export default function Mascots({ step }: MascotsProps) {
   const isRight = step % 2 === 0;
 
   return (
-    <div className="fixed inset-0 z-10 pointer-events-none hidden md:block overflow-hidden">
+    <div className={`fixed inset-0 z-10 pointer-events-none overflow-hidden ${showOnMobile ? "" : "hidden md:block"}`}>
       <AnimatePresence mode="wait">
         <motion.div
           key={`mascot-${step}`}
@@ -47,7 +50,7 @@ export default function Mascots({ step }: MascotsProps) {
               alt={mascots[index].alt}
               width={250}
               height={250}
-              className="drop-shadow-xl"
+              className="drop-shadow-xl w-[150px] h-[150px] md:w-[250px] md:h-[250px]"
             />
           </div>
         </motion.div>

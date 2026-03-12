@@ -71,7 +71,7 @@ export default function Ballot() {
 
   return (
     <div className="min-h-screen flex flex-col star-field">
-      <Mascots step={step} />
+      {step > 0 && step <= categories.length && <Mascots step={step} nomineeCount={categories[step - 1].nominees.length} />}
 
 
       {/* Progress bar */}
@@ -121,7 +121,7 @@ export default function Ballot() {
         </div>
       )}
 
-      <div className="flex-1 flex items-center justify-center px-4 py-24">
+      <div className={`flex-1 flex justify-center px-4 ${step === 0 || step === totalSteps ? "items-center py-24" : "items-start pt-16 pb-24"}`}>
         <AnimatePresence mode="wait">
           {/* Step 0: Name */}
           {step === 0 && (
