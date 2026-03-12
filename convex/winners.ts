@@ -22,6 +22,22 @@ export const setWinner = mutation({
   },
 });
 
+export const clearWinner = mutation({
+  args: {
+    categoryId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("winners")
+      .withIndex("by_category", (q) => q.eq("categoryId", args.categoryId))
+      .unique();
+
+    if (existing) {
+      await ctx.db.delete(existing._id);
+    }
+  },
+});
+
 export const getAll = query({
   handler: async (ctx) => {
     const all = await ctx.db.query("winners").collect();

@@ -14,6 +14,8 @@ export default function Ballot() {
   const [picks, setPicks] = useState<Record<string, string>>({});
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submittedToken, setSubmittedToken] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const submit = useMutation(api.submissions.submit);
   const deadline = useQuery(api.submissions.getDeadline);
 
@@ -29,7 +31,8 @@ export default function Ballot() {
     setSubmitting(true);
     setError("");
     try {
-      await submit({ name, picks });
+      const result = await submit({ name, picks });
+      setSubmittedToken(result.publicToken);
       setStep(totalSteps);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Error al enviar");
@@ -51,6 +54,20 @@ export default function Ballot() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
+
+  const resultUrl =
+    submittedToken && typeof window !== "undefined"
+      ? `${window.location.origin}/results/${submittedToken}`
+      : "";
+
+  const copyResultUrl = useCallback(async () => {
+    if (!resultUrl) {
+      return;
+    }
+    await navigator.clipboard.writeText(resultUrl);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  }, [resultUrl]);
 
   if (isExpired) {
     return (
@@ -314,8 +331,32 @@ export default function Ballot() {
                 <RetroSparkles />
                 <p className="text-lg text-cream/70 italic leading-relaxed mt-6">
                   Tus predicciones están registradas.<br />
-                  Nos vemos el 15 de marzo.
+                  Usa tu link personal para seguir tus aciertos en vivo.
                 </p>
+                {resultUrl && (
+                  <div className="mt-8 rounded-2xl border border-cream/15 bg-brown/20 p-4">
+                    <p className="text-xs uppercase tracking-[0.3em] text-cream/50 mb-3">
+                      Tu página en vivo
+                    </p>
+                    <p className="text-sm text-cream break-all">
+                      {resultUrl}
+                    </p>
+                    <div className="mt-4 flex flex-col sm:flex-row gap-3 justify-center">
+                      <button
+                        onClick={copyResultUrl}
+                        className="btn-primary px-6 py-3 min-h-[44px]"
+                      >
+                        {copied ? "Link copiado" : "Copiar link"}
+                      </button>
+                      <a
+                        href={resultUrl}
+                        className="bg-cream/10 hover:bg-cream/20 text-cream px-6 py-3 rounded-xl transition-colors min-h-[44px] inline-flex items-center justify-center"
+                      >
+                        Ver resultados en vivo
+                      </a>
+                    </div>
+                  </div>
+                )}
                 <div className="mt-8">
                   <RetroSparkles />
                 </div>

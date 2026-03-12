@@ -6,7 +6,8 @@ export default defineSchema({
     name: v.string(),
     picks: v.record(v.string(), v.string()), // categoryId -> nominee
     submittedAt: v.number(),
-  }),
+    publicToken: v.optional(v.string()),
+  }).index("by_public_token", ["publicToken"]),
   winners: defineTable({
     categoryId: v.string(),
     winner: v.string(),
