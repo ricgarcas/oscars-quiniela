@@ -6,6 +6,7 @@ import { api } from "../../convex/_generated/api";
 import { categories } from "@/lib/categories";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star4, RetroSparkles } from "./RetroStars";
+import Mascots from "./Mascots";
 
 export default function Ballot() {
   const [step, setStep] = useState(0);
@@ -70,8 +71,8 @@ export default function Ballot() {
 
   return (
     <div className="min-h-screen flex flex-col star-field">
-      {/* Film strip top */}
-      <div className="film-strip" />
+      <Mascots step={step} />
+
 
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 h-[4px] bg-brown-light/50 z-50">
@@ -83,37 +84,39 @@ export default function Ballot() {
         />
       </div>
 
+
+
       {/* Top nav bar */}
       {step > 0 && step < totalSteps && (
-        <div className="fixed top-[4px] left-0 right-0 z-40 bg-brown/90 backdrop-blur-sm border-b border-gold/20">
-          <div className="max-w-screen-xl mx-auto px-4 py-2 flex items-center justify-between">
+        <div className="fixed top-[4px] left-0 right-0 z-40 bg-teal-dark/95 backdrop-blur-sm border-b border-cream/10">
+          <div className="max-w-screen-xl mx-auto px-4 py-1 flex items-center justify-between">
             <button
               onClick={() => setStep((s) => s - 1)}
-              className="text-cream/70 text-sm hover:text-yellow transition-colors duration-200 min-h-[44px] flex items-center gap-1"
+              className="bg-cream/15 hover:bg-cream/25 text-cream rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200"
+              aria-label="Anterior"
             >
-              ← Anterior
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
 
-            <span className="text-xs uppercase tracking-widest text-cream/50 flex items-center gap-2">
-              <Star4 size={8} className="text-gold" />
+            <span className="font-retro text-base text-cream flex items-center gap-2">
+              <Star4 size={10} className="text-yellow" />
               {step <= categories.length
                 ? `${step} de ${categories.length}`
                 : "Revisión"}
-              <Star4 size={8} className="text-gold" />
+              <Star4 size={10} className="text-yellow" />
             </span>
 
-            {step <= categories.length && picks[categories[step - 1]?.id] && (
+            {step <= categories.length && picks[categories[step - 1]?.id] ? (
               <button
                 onClick={() => setStep((s) => s + 1)}
-                className="text-cream/70 text-sm hover:text-yellow transition-colors duration-200 min-h-[44px] flex items-center gap-1"
+                className="bg-cream/15 hover:bg-cream/25 text-cream rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200"
+                aria-label="Siguiente"
               >
-                Siguiente →
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </button>
+            ) : (
+              <div className="w-10" />
             )}
-            {step <= categories.length && !picks[categories[step - 1]?.id] && (
-              <div className="min-w-[100px]" />
-            )}
-            {step > categories.length && <div className="min-w-[100px]" />}
           </div>
         </div>
       )}
@@ -133,9 +136,13 @@ export default function Ballot() {
               <div className="marquee-border p-8 md:p-12 teal-card">
                 {/* Masthead */}
                 <div className="mb-2">
-                  <p className="text-xs uppercase tracking-[0.3em] text-cream/60 mb-3">
-                    ★ Vol. I · Marzo 2026 · Casa Maggie ★
-                  </p>
+                  <div className="flex items-center gap-3 justify-center mb-6">
+                    <div className="h-px flex-1 max-w-16 bg-cherry/30" />
+                    <p className="font-retro text-base text-cherry">
+                      15 de Marzo, 2026 · 5:00 PM · Casa Maggie
+                    </p>
+                    <div className="h-px flex-1 max-w-16 bg-cherry/30" />
+                  </div>
                   <h1 className="retro-title text-4xl sm:text-5xl lg:text-7xl leading-[1.1] mb-2">
                     Quiniela de
                   </h1>
@@ -147,12 +154,9 @@ export default function Ballot() {
                 <RetroSparkles />
 
                 <div className="my-8">
-                  <label className="text-xs uppercase tracking-widest text-cream/60 block mb-3">
-                    Tu nombre
-                  </label>
                   <input
                     type="text"
-                    placeholder="Escribe aquí"
+                    placeholder="Tu nombre"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full max-w-sm mx-auto block bg-cream/95 text-brown border-2 border-cream rounded-xl px-4 py-3 text-xl text-center focus:outline-none focus:border-yellow focus:ring-2 focus:ring-yellow/30 transition-all duration-200 placeholder:text-brown/30"
@@ -179,7 +183,7 @@ export default function Ballot() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -16 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="w-full max-w-xl"
+              className="w-full max-w-3xl"
             >
               <div className="text-center mb-8">
                 <span className="inline-flex items-center gap-2 text-gold text-xs uppercase tracking-widest mb-3">
@@ -192,7 +196,7 @@ export default function Ballot() {
                 </h2>
               </div>
 
-              <div className="space-y-3">
+              <div className={`grid gap-3 ${categories[step - 1].nominees.length > 5 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
                 {categories[step - 1].nominees.map((nominee, i) => {
                   const isSelected = picks[categories[step - 1].id] === nominee;
                   return (
@@ -321,17 +325,7 @@ export default function Ballot() {
         </AnimatePresence>
       </div>
 
-      {/* Footer */}
-      {step === 0 && (
-        <footer className="py-4 text-center">
-          <div className="film-strip mb-4" />
-          <p className="text-xs uppercase tracking-widest text-cream/30 flex items-center justify-center gap-2">
-            <Star4 size={8} className="text-gold/50" />
-            Fecha límite: 15 de marzo, 2026 · 4:00 PM CDMX
-            <Star4 size={8} className="text-gold/50" />
-          </p>
-        </footer>
-      )}
+
     </div>
   );
 }

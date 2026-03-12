@@ -16,23 +16,21 @@
 }
 
 body {
-  background: linear-gradient(135deg, #1a100a 0%, #1e2a2a 40%, #162020 100%);
+  background: #4AAFAC;
+  background-image:
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      rgba(255,255,255,0.08) 0deg 10deg,
+      transparent 10deg 20deg
+    );
+  background-size: cover;
+  background-attachment: fixed;
   color: var(--color-cream);
   font-family: var(--font-sans);
   min-height: 100vh;
 }
 
-/* Film grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-}
+
 
 /* Marquee light border */
 .marquee-border {
@@ -47,47 +45,25 @@ body::after {
   border-radius: 20px;
   border: 2px dashed var(--color-gold);
   opacity: 0.5;
-}
-.marquee-border::after {
-  content: '';
-  position: absolute;
-  inset: -14px;
-  border-radius: 24px;
-  background: repeating-radial-gradient(
-    circle at 0 0,
-    transparent 0,
-    transparent 6px,
-    transparent 6px
-  );
-  background-image: radial-gradient(circle, var(--color-yellow) 2px, transparent 2px);
-  background-size: 20px 20px;
-  background-position: 10px 3px;
-  opacity: 0.35;
   pointer-events: none;
-  animation: marquee-glow 2s ease-in-out infinite alternate;
 }
 
-@keyframes marquee-glow {
-  0% { opacity: 0.25; }
-  100% { opacity: 0.45; }
-}
 
 /* Neon title glow */
 .retro-title {
   font-family: var(--font-retro);
   color: var(--color-cream);
   text-shadow:
-    0 0 10px rgba(255, 248, 231, 0.3),
-    0 0 30px rgba(212, 43, 43, 0.2),
-    2px 2px 0px var(--color-cherry);
+    2px 2px 0px rgba(0,0,0,0.25),
+    0 0 20px rgba(255, 248, 231, 0.2);
 }
 
 .retro-title-red {
   font-family: var(--font-retro);
   color: var(--color-cherry);
   text-shadow:
-    2px 2px 0px rgba(0,0,0,0.3),
-    0 0 20px rgba(212, 43, 43, 0.15);
+    2px 2px 0px rgba(0,0,0,0.35),
+    0 0 10px rgba(212, 43, 43, 0.2);
 }
 
 /* Film strip top/bottom */
@@ -187,9 +163,9 @@ body::after {
 
 /* Teal card surface */
 .teal-card {
-  background: linear-gradient(135deg, var(--color-teal) 0%, var(--color-teal-dark) 100%);
+  background: linear-gradient(135deg, #7DD8D5 0%, #5BC5C2 100%);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
 }
 
 /* Admin styles */
